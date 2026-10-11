@@ -1,310 +1,262 @@
-NEXUS // Linux Operations for DevOps
+Linux Operations Handbook for DevOps ⚙️
 
-<p align="center"> <img src="https://capsule-render.vercel.app/api?type=rect&color=0:050816,50:071B36,100:0066FF&height=220&section=header&text=NEXUS%20LINUX&fontSize=52&fontColor=FFFFFF&fontAlignY=42&desc=SYSTEMS%20%E2%80%A2%20AUTOMATION%20%E2%80%A2%20INFRASTRUCTURE&descSize=13&descAlignY=65&animation=fadeIn" width="100%" alt="Nexus Linux - blue and black DevOps banner"/> </p>
+A practical reference for working with Linux servers, managing system resources, troubleshooting issues, and automating everyday infrastructure tasks.
 
-<p align="center"> <img src="https://img.shields.io/badge/PLATFORM-LINUX-080D1B?style=for-the-badge&logo=linux&logoColor=00A3FF" alt="Linux"/> <img src="https://img.shields.io/badge/FOCUS-DEVOPS-080D1B?style=for-the-badge&logo=devops&logoColor=00A3FF" alt="DevOps"/> <img src="https://img.shields.io/badge/LEVEL-BEGINNER%20%E2%86%92%20PRACTICAL-080D1B?style=for-the-badge&logo=gnubash&logoColor=00A3FF" alt="Learning level"/> </p>
+Linux is a core part of modern DevOps workflows. Whether you're deploying applications, investigating production errors, or maintaining cloud instances, knowing your way around the terminal makes your work faster and more reliable.
 
-The terminal is your control plane.
-Learn the commands that keep servers running, deployments moving, and infrastructure under control.
+This handbook organizes essential commands by real-world tasks, with short explanations, useful options, and examples you can practice on your own machine.
 
-Nexus Linux is a task-oriented field guide to everyday Linux operations. It brings together the commands used to inspect systems, manage access, diagnose failures, monitor resources, and maintain application environments.
+🧭 Quick Navigation
+Account & User Administration
+Navigating the Filesystem
+Permissions and Access Control
+Process and Job Control
+Network Diagnostics
+Storage and RAM Monitoring
+System Services and Logs
+Software Installation
+Archives and Backups
+Working with Text and Logs
+Terminal Editing Tools
+Operational Safety Tips
+👤 Account & User Administration
 
-Instead of memorizing isolated commands, use this handbook to understand what each command does and when it belongs in a real DevOps workflow.
+Use these commands to identify the active account and inspect user or group membership.
 
-<img src="https://api.iconify.design/lucide:terminal.svg?color=%2300A3FF" width="23" align="center" alt=""/> COMMAND CENTER
-Module	Operational focus
-01 — Identity	Accounts, users and groups
-02 — Filesystem	Navigation, files and directories
-03 — Access Control	Permissions and ownership
-04 — Processes	Running applications and shell jobs
-05 — Connectivity	Network tests and remote access
-06 — Resources	Disk capacity, memory and storage
-07 — Services	systemd, system status and logs
-08 — Packages	Software installation and updates
-09 — Archives	Compression and backup files
-10 — Text Analysis	Searching, filtering and inspecting logs
-11 — Editing	Terminal-based configuration changes
-<img src="https://api.iconify.design/lucide:user-round-cog.svg?color=%2300A3FF" width="23" align="center" alt=""/> 01 / IDENTITY & ACCESS
+Command	Purpose	Example
+whoami	Identify the current user	whoami
+id	Display user and group IDs	id deploy
+groups	List group memberships	groups
+passwd	Change a user's password	passwd
 
-Know which account is active before changing files, running scripts, or executing privileged operations.
+Practical scenario: Before changing file ownership or running administrative tasks, confirm which account you're using.
 
-Command	Function	Example
-whoami	Print the effective username	whoami
-id	Inspect user and group identifiers	id
-groups	Display group memberships	groups
-passwd	Change a password	passwd
-# Inspect the current account
-whoami
-id
-groups
+📁 Navigating the Filesystem
 
+These commands help you explore directories, create files, and organize application or configuration files.
 
-Operations note: When troubleshooting permission failures, compare the active user and group membership with the ownership of the affected file.
+Command	Purpose	Example
+pwd	Display the current directory	pwd
+ls	Inspect directory contents	ls -lah
+cd	Move to another directory	cd /var/log
+mkdir	Create a directory	mkdir -p app/config
+touch	Create a file or refresh its timestamp	touch deploy.log
+cp	Copy a file	cp app.conf app.conf.bak
+mv	Move or rename a file	mv old.conf new.conf
+rm	Delete files	rm temporary.txt
+find	Locate files by criteria	find /var/log -type f -name "*.log"
+Useful options
+ls -a — include hidden entries.
+ls -lh — show file sizes in readable units.
+mkdir -p — create missing parent directories.
+cp -r — copy directories and their contents.
+find ... -type f — restrict a search to regular files.
 
-<img src="https://api.iconify.design/lucide:folder-tree.svg?color=%2300A3FF" width="23" align="center" alt=""/> 02 / FILESYSTEM CONTROL
+Practical scenario: Locate application logs, create a configuration directory, or back up a file before editing it.
 
-Move through the Linux directory hierarchy, organize application files, and locate configuration or log files efficiently.
+🔐 Permissions and Access Control
 
-Command	What it does	Example
-pwd	Prints the current location	pwd
-ls	Lists directory contents	ls -lah
-cd	Changes the working directory	cd /var/log
-mkdir	Creates directories	mkdir -p app/config
-touch	Creates a file or updates its timestamp	touch app.log
-cp	Copies files	cp app.conf app.conf.bak
-mv	Moves or renames files	mv old.conf new.conf
-rm	Removes files	rm temporary.txt
-find	Searches a directory tree	find . -type f -name "*.log"
-Field examples
-# Reveal hidden files and readable file sizes
-ls -lah
+Linux permissions determine who can read, modify, or execute files. Correct permissions are especially important for deployment scripts, SSH keys, and application directories.
 
-# Create a nested application directory
-mkdir -p /opt/myapp/config
-
-# Find log files under the current directory
-find . -type f -name "*.log"
-
-
-Caution: Review the target before using recursive deletion. rm -rf can remove an entire directory tree without prompting.
-
-<img src="https://api.iconify.design/lucide:shield-check.svg?color=%2300A3FF" width="23" align="center" alt=""/> 03 / PERMISSIONS & OWNERSHIP
-
-Control who can read, modify, or execute files. These settings matter for deployment scripts, SSH credentials, and application configuration.
-
-Command	Function	Example
-ls -l	Inspects permissions and ownership	ls -l deploy.sh
-chmod	Changes permission bits	chmod +x deploy.sh
-chown	Changes owner or group	sudo chown deploy:deploy app.log
-# Allow the owner to execute a deployment script
-chmod u+x deploy.sh
-
-# Apply a standard configuration-file permission mode
+Command	Purpose	Example
+ls -l	Inspect permissions and ownership	ls -l deploy.sh
+chmod	Modify access permissions	chmod +x deploy.sh
+chown	Change file owner or group	sudo chown deploy:deploy app.log
+Common permission examples
 chmod 644 app.conf
-
-# Restrict a private SSH key to its owner
+chmod 755 deploy.sh
 chmod 600 ~/.ssh/id_ed25519
 
-Mode	Typical use
-644	Readable configuration or text file
-755	Executable script or accessible directory
-600	Private file restricted to its owner
+644 — owner can read and write; others can read.
+755 — owner can read, write, and execute; others can read and execute.
+600 — only the owner has read and write access.
 
-Apply recursive ownership or permission changes only after confirming the target path.
+Remember: Avoid applying broad permissions recursively without checking the target path and the security implications.
 
-<img src="https://api.iconify.design/lucide:activity.svg?color=%2300A3FF" width="23" align="center" alt=""/> 04 / PROCESS CONTROL
+🖥️ Process and Job Control
 
-Identify resource-heavy processes, inspect running applications, and manage jobs launched from the current shell.
+When a server becomes slow or an application stops responding, process-management commands help identify what is running and take appropriate action.
 
-Command	Function	Example
-ps	Lists process information	ps aux
-top	Displays live process statistics	top
-pgrep	Finds processes by name	pgrep -af nginx
-kill	Sends a signal to a process	kill 1234
-jobs	Lists shell-managed jobs	jobs -l
-fg	Brings a job to the foreground	fg %1
-bg	Resumes a stopped job in the background	bg %1
-Shutdown sequence for an unresponsive process
-# Inspect processes associated with an application
-pgrep -af myapp
-
-# Request graceful termination
+Command	Purpose	Example
+ps	Inspect running processes	ps aux
+top	Monitor processes interactively	top
+pgrep	Find processes by name	pgrep -af nginx
+kill	Send a signal to a process	kill 1234
+jobs	List jobs in the current shell	jobs -l
+fg	Resume a shell job in the foreground	fg %1
+bg	Continue a stopped shell job in the background	bg %1
+Terminating a process
+kill 1234
 kill -TERM 1234
-
-# Use only if graceful termination fails
 kill -KILL 1234
 
 
-Replace 1234 with the actual process ID. A forced kill prevents the process from handling normal cleanup signals.
+Prefer the default termination signal or -TERM first. Use -KILL only when a process will not stop gracefully, because it cannot perform normal cleanup.
 
-<img src="https://api.iconify.design/lucide:network.svg?color=%2300A3FF" width="23" align="center" alt=""/> 05 / NETWORK & CONNECTIVITY
+🌐 Network Diagnostics
 
-Check reachability, inspect network interfaces, examine listening ports, and connect to remote machines.
+Network commands are useful for checking connectivity, inspecting HTTP responses, and accessing remote Linux hosts.
 
 Command	Purpose	Example
-ping	Tests ICMP reachability	ping -c 4 example.com
-curl	Makes HTTP requests	curl -I https://example.com
-ssh	Opens a remote shell	ssh deploy@server.example.com
-ip	Displays interfaces and routes	ip addr
-ss	Inspects sockets and listening ports	ss -ltn
-# Display network addresses
-ip addr
-
-# Inspect the routing table
+ping	Test basic network reachability	ping -c 4 example.com
+curl	Send HTTP requests or retrieve URLs	curl -I https://example.com
+ssh	Connect to a remote server	ssh deploy@server.example.com
+ss	Inspect sockets and listening ports	ss -tulpn
+ip	Inspect network interfaces and routes	ip addr
+Common options
+curl -sS https://example.com
+ssh -p 2222 deploy@192.0.2.10
 ip route
-
-# Check listening TCP ports
 ss -ltn
 
-# Retrieve HTTP response headers
-curl -I https://example.com
+curl -I — request HTTP headers.
+ssh -p — connect using a specified port.
+ss -ltn — display listening TCP sockets.
+ip route — show the system's routing table.
 
-# Connect using a non-default SSH port
-ssh -p 2222 deploy@192.0.2.10
+Troubleshooting tip: A failed ping does not always mean a host is unavailable; firewalls and network policies may block ICMP traffic.
 
+💾 Storage and RAM Monitoring
 
-Diagnostic tip: A failed ping alone doesn't prove a server is offline. Check DNS resolution, routes, firewall rules, and the relevant application port as well.
+Monitor disk capacity, directory sizes, and available memory before resource shortages affect a running service.
 
-<img src="https://api.iconify.design/lucide:hard-drive.svg?color=%2300A3FF" width="23" align="center" alt=""/> 06 / DISK, MEMORY & STORAGE
-
-Monitor resource availability before full disks or memory pressure disrupt applications.
-
-Command	Function	Example
-df	Reports filesystem capacity	df -h
-du	Measures file or directory usage	du -sh /var/log
-free	Reports RAM and swap usage	free -h
-lsblk	Lists block devices	lsblk -f
-# Check mounted filesystem capacity
+Command	Purpose	Example
+df	Check filesystem capacity	df -h
+du	Measure directory or file usage	du -sh /var/log
+free	View RAM and swap statistics	free -h
+lsblk	List block devices	lsblk
+Quick resource checks
 df -h
-
-# Summarize a directory's disk usage
-du -sh /var/log
-
-# Review memory and swap statistics
+du -sh /var/log/*
 free -h
-
-# Inspect disks and filesystems
 lsblk -f
 
-Resource investigation
 
-When disk space is running low:
+Practical scenario: If a server runs out of disk space, use df -h to identify the affected filesystem and du to investigate which directories consume the most space.
 
-Use df -h to identify the affected filesystem.
-Use du -sh on relevant directories to locate large consumers.
-Check whether logs, caches, backups, or temporary files are responsible.
-Remove or rotate files only after verifying that they are safe to delete.
-<img src="https://api.iconify.design/lucide:server-cog.svg?color=%2300A3FF" width="23" align="center" alt=""/> 07 / SERVICES & SYSTEM LOGS
+🛠️ System Services and Logs
 
-On systemd-based distributions, manage services and inspect journal entries to understand why an application failed or stopped responding.
+On Linux distributions using systemd, systemctl controls services while journalctl helps investigate service and system events.
 
-Command	Function	Example
-uname	Reports kernel and system details	uname -a
-uptime	Shows uptime and load averages	uptime
-systemctl status	Checks service state	systemctl status nginx
-systemctl restart	Restarts a service	sudo systemctl restart nginx
-systemctl enable	Enables startup at boot	sudo systemctl enable nginx
-journalctl	Reads systemd journal records	sudo journalctl -u nginx
-Incident investigation sequence
-# Inspect service health
+Command	Purpose	Example
+uname	Display kernel information	uname -a
+uptime	Show uptime and load averages	uptime
+systemctl status	Inspect a service	systemctl status nginx
+systemctl restart	Restart a service	sudo systemctl restart nginx
+systemctl enable	Configure a service to start at boot	sudo systemctl enable nginx
+journalctl	Read systemd journal entries	journalctl -u nginx
+Log investigation workflow
 sudo systemctl status nginx
-
-# Review the most recent service messages
 sudo journalctl -u nginx -n 100
-
-# Follow new service log entries
 sudo journalctl -u nginx -f
 
+-n 100 — display the latest 100 journal entries.
+-f — follow incoming log entries.
+-u nginx — filter logs for the specified service.
 
-Diagnose the underlying issue before restarting a production service. Restarting can interrupt traffic without resolving the original fault.
+Practical scenario: When a deployment fails, inspect the service status and recent logs before attempting a restart.
 
-<img src="https://api.iconify.design/lucide:package.svg?color=%2300A3FF" width="23" align="center" alt=""/> 08 / PACKAGE OPERATIONS
+📦 Software Installation on Debian/Ubuntu
 
-The following examples use APT on Debian and Ubuntu systems. Package commands differ on other Linux distributions.
+APT is the standard package-management tool on Debian-based systems. The following examples apply to Debian and Ubuntu; other distributions use different package managers.
 
 Command	Purpose	Example
-apt update	Refreshes package metadata	sudo apt update
-apt install	Installs software	sudo apt install nginx
-apt upgrade	Upgrades installed packages	sudo apt upgrade
-apt remove	Removes a package	sudo apt remove nginx
-apt search	Searches package names and descriptions	apt search nginx
-# Refresh available package information
+apt update	Refresh available package metadata	sudo apt update
+apt install	Install software	sudo apt install nginx
+apt upgrade	Upgrade installed packages	sudo apt upgrade
+apt remove	Remove an installed package	sudo apt remove nginx
+apt search	Search available packages	apt search nginx
+Typical installation sequence
 sudo apt update
-
-# Install a web server
 sudo apt install nginx
-
-# Confirm service status
 sudo systemctl status nginx
 
 
-Review the proposed package changes before confirming an upgrade or removal on a production host.
+Review package changes before confirming upgrades or removals, especially on production servers.
 
-<img src="https://api.iconify.design/lucide:archive.svg?color=%2300A3FF" width="23" align="center" alt=""/> 09 / ARCHIVES & BACKUPS
+🗜️ Archives and Backups
 
-Bundle application assets, compress logs, and inspect backup archives before transferring or extracting them.
-
-Command	Function	Example
-tar	Creates or extracts archives	tar -czf backup.tar.gz app/
-gzip	Compresses a file	gzip access.log
-zip	Creates ZIP archives	zip -r app.zip app/
-unzip	Extracts ZIP archives	unzip app.zip
-# Create a gzip-compressed archive
-tar -czf app-backup.tar.gz app/
-
-# Inspect its contents without extracting
-tar -tzf app-backup.tar.gz
-
-# Extract the archive
-tar -xzf app-backup.tar.gz
-
-# Package a directory as ZIP
-zip -r app.zip app/
-
-
-Check archive contents and extraction destinations when handling files from an untrusted source.
-
-<img src="https://api.iconify.design/lucide:search-code.svg?color=%2300A3FF" width="23" align="center" alt=""/> 10 / TEXT ANALYSIS & LOG FORENSICS
-
-Search application output, examine configuration files, and monitor changing logs using standard command-line utilities.
+Archives are commonly used to bundle configuration files, package application artifacts, and transfer backups between systems.
 
 Command	Purpose	Example
-cat	Prints file contents	cat app.conf
-less	Browses long files	less app.log
-head	Displays the first lines	head -n 20 app.log
-tail	Displays the final lines	tail -n 50 app.log
-grep	Searches for matching text	grep -i "error" app.log
-echo	Prints text or variable values	echo "$HOME"
-wc	Counts lines, words or bytes	wc -l app.log
-Useful investigation patterns
-# Find errors regardless of letter case
-grep -i "error" app.log
+tar	Create or extract archives	tar -czf backup.tar.gz app/
+gzip	Compress a file	gzip access.log
+zip	Create a ZIP archive	zip -r app.zip app/
+unzip	Extract a ZIP archive	unzip app.zip
+Common archive operations
+# Create a compressed archive
+tar -czf logs-backup.tar.gz /var/log/myapp/
 
-# Search nested log directories
+# List archive contents
+tar -tzf logs-backup.tar.gz
+
+# Extract an archive
+tar -xzf logs-backup.tar.gz
+
+
+The tar options commonly used here are -c for creating an archive, -x for extracting, -z for gzip compression, -f for the archive filename, and -t for listing its contents.
+
+📝 Working with Text and Logs
+
+Text-processing commands are essential for inspecting configuration files, searching application errors, and following log output during troubleshooting.
+
+Command	Purpose	Example
+cat	Print file contents	cat app.conf
+less	Browse large files interactively	less /var/log/syslog
+head	Display the beginning of a file	head -n 15 app.log
+tail	Display the end of a file	tail -n 50 app.log
+grep	Find matching text	grep -i "error" app.log
+echo	Print text or variable values	echo "$HOME"
+wc	Count lines, words, or bytes	wc -l app.log
+Examples for log analysis
+# Search without case sensitivity
+grep -i "failed" app.log
+
+# Search all log files in a directory
 grep -rni "exception" /var/log/myapp/
 
-# Follow newly written entries
+# Follow newly written log entries
 tail -f app.log
 
-# Count matching error lines
+# Count matching error messages
 grep -ic "error" app.log
 
-# Display the last 100 lines
-tail -n 100 app.log
-
-Output redirection
-# Replace the contents of a file
+Writing output to files
 echo "Deployment started" > deploy.log
-
-# Append a new line without replacing existing content
 echo "Deployment completed" >> deploy.log
 
+> replaces the destination file's existing contents.
+>> appends output to the end of the file.
 
-> overwrites the destination file, while >> appends to it. Verify the target filename before redirecting important data.
+Be careful with redirection: using > on an important configuration or log file can erase its previous contents.
 
-<img src="https://api.iconify.design/lucide:terminal-square.svg?color=%2300A3FF" width="23" align="center" alt=""/> 11 / TERMINAL EDITORS
+✍️ Terminal Editing Tools
 
-Edit configuration files directly on a remote host without relying on a graphical interface.
+Use a terminal editor when you need to update a configuration file directly on a server.
 
-Editor	Recommended for	Launch command
-nano	Straightforward file edits	nano app.conf
-vim	Modal editing and advanced terminal workflows	vim app.conf
+Tool	Best suited for	Example
+nano	Straightforward editing	nano app.conf
+vim	Modal editing and advanced workflows	vim app.conf
 
-Before changing a production configuration, create a backup when appropriate and validate the resulting file before reloading or restarting its service.
+Before modifying production configuration, consider creating a backup and validating the file before restarting the related service.
 
-<img src="https://api.iconify.design/lucide:shield-alert.svg?color=%2300A3FF" width="23" align="center" alt=""/> OPERATIONS SAFETY CHECKLIST
+🧯 Operational Safety Tips
 
-Use this checklist before executing commands that can affect a live system.
+A few habits can prevent common mistakes while administering Linux systems.
 
-Confirm the host and current working directory.
-Check the target before deleting or overwriting files.
-Use elevated privileges only when necessary.
-Prefer graceful process termination over forced termination.
-Verify permissions before making SSH keys or secrets accessible.
-Inspect service logs before restarting failed applications.
-Check available storage before creating large backups.
-Validate configuration changes before applying them.
+Inspect before deleting. Run ls or find to verify which files match your intended target.
+Avoid unnecessary force. Commands such as rm -rf can permanently remove large directory trees.
+Use least privilege. Run administrative commands with sudo only when required.
+Check service logs first. Diagnose the cause of a failure before repeatedly restarting a service.
+Protect credentials. Keep SSH private keys and secret configuration files readable only by authorized users.
+Verify disk capacity. Check available storage before generating large archives or deploying artifacts.
+Understand the environment. Confirm the hostname and target directory before making changes on a production machine.
+🚀 Keep Practicing
 
-<p align="center"> <img src="https://capsule-render.vercel.app/api?type=rect&color=0:0066FF,50:071B36,100:050816&height=100&section=footer&text=MASTER%20THE%20SYSTEM.%20AUTOMATE%20THE%20WORK.&fontSize=18&fontColor=FFFFFF&fontAlignY=55" width="100%" alt="Master the system. Automate the work."/> </p>
+The best way to learn Linux is to use these commands in a test environment, understand their output, and gradually combine them into troubleshooting workflows.
 
-<p align="center"> NEXUS LINUX / A practical reference for modern infrastructure operations. </p>
+This handbook is intended to be a practical reference for Linux administration, cloud infrastructure, CI/CD operations, and everyday DevOps work.
+
+Found something useful? Improve the guide with additional examples, distribution-specific commands, or troubleshooting scenarios.
+
+Learn the command. Understand the impact. Automate the workflow.
