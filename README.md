@@ -1,58 +1,40 @@
-```markdown
 # Linux Operations Handbook for DevOps
-
-<p align="center">
-  <img src="https://api.iconify.design/lucide:terminal-square.svg?color=%23007BFF" width="64" alt="Terminal icon"/>
-</p>
-
-<p align="center">
-  <strong>A Practical Guide to Linux Administration and DevOps Operations</strong><br/>
-  Learn essential commands for server management, troubleshooting, automation, and infrastructure maintenance.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/OS-Linux-007BFF?style=flat-square&logo=linux&logoColor=white" alt="Linux"/>
-  <img src="https://img.shields.io/badge/Focus-DevOps-007BFF?style=flat-square" alt="DevOps"/>
-  <img src="https://img.shields.io/badge/Format-Command%20Reference-007BFF?style=flat-square" alt="Command reference"/>
-</p>
 
 ---
 
 ## Table of Contents
 
-1. [User and Account Management](#1-user-and-account-management)
-2. [Files and Directories](#2-files-and-directories)
-3. [Permissions and Ownership](#3-permissions-and-ownership)
-4. [Process Management](#4-process-management)
-5. [Networking and Connectivity](#5-networking-and-connectivity)
-6. [Disk and Memory Monitoring](#6-disk-and-memory-monitoring)
-7. [System Services and Logs](#7-system-services-and-logs)
-8. [Package Management](#8-package-management)
-9. [Archives and Compression](#9-archives-and-compression)
-10. [Text Processing and Log Analysis](#10-text-processing-and-log-analysis)
-11. [Terminal Editors](#11-terminal-editors)
-12. [Linux Administration Best Practices](#12-linux-administration-best-practices)
+1. [User and Account Management](https://www.google.com/search?q=%231-user-and-account-management)
+2. [Files and Directories](https://www.google.com/search?q=%232-files-and-directories)
+3. [Permissions and Ownership](https://www.google.com/search?q=%233-permissions-and-ownership)
+4. [Process Management](https://www.google.com/search?q=%234-process-management)
+5. [Networking and Connectivity](https://www.google.com/search?q=%235-networking-and-connectivity)
+6. [Disk and Memory Monitoring](https://www.google.com/search?q=%236-disk-and-memory-monitoring)
+7. [System Services and Logs](https://www.google.com/search?q=%237-system-services-and-logs)
+8. [Package Management](https://www.google.com/search?q=%238-package-management)
+9. [Archives and Compression](https://www.google.com/search?q=%239-archives-and-compression)
+10. [Text Processing and Log Analysis](https://www.google.com/search?q=%2310-text-processing-and-log-analysis)
+11. [Terminal Editors](https://www.google.com/search?q=%2311-terminal-editors)
+12. [Linux Administration Best Practices](https://www.google.com/search?q=%2312-linux-administration-best-practices)
 
 ---
 
 ## 1. User and Account Management
 
-<img src="https://api.iconify.design/lucide:users.svg?color=%23007BFF" width="20" alt="Users icon"/> Account-related commands help identify the active user, inspect group membership, and manage authentication.
+ Account-related commands help identify the active user, inspect group membership, and manage authentication.
 
 | Command | Description | Example |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `whoami` | Displays the effective username | `whoami` |
 | `id` | Shows user and group identifiers | `id deploy` |
 | `groups` | Lists a user's group memberships | `groups` |
 | `passwd` | Changes a password | `passwd` |
 
 ### Example
-```bash
+
 whoami
 id
 groups
-
-```
 
 > **DevOps Use Case:** Check your account and permissions before executing administrative commands or troubleshooting access problems.
 
@@ -86,11 +68,8 @@ groups
 
 ### Example: Find Application Logs
 
-```bash
 cd /var/log
 find . -type f -name "*.log"
-
-```
 
 > **Caution:** Verify the target path before running destructive commands such as `rm -rf`.
 
@@ -108,12 +87,9 @@ find . -type f -name "*.log"
 
 ### Common Permission Modes
 
-```bash
 chmod 644 app.conf
 chmod 755 deploy.sh
 chmod 600 ~/.ssh/id_ed25519
-
-```
 
 | Mode | Meaning |
 | --- | --- |
@@ -141,14 +117,13 @@ chmod 600 ~/.ssh/id_ed25519
 
 ### Stopping an Unresponsive Process
 
-```bash
 # Request normal termination
+
 kill -TERM 1234
 
 # Force termination if necessary
-kill -KILL 1234
 
-```
+kill -KILL 1234
 
 > **Tip:** Replace `1234` with the actual process ID. Prefer graceful termination because a forced kill does not allow normal cleanup.
 
@@ -161,30 +136,32 @@ kill -KILL 1234
 | Command | Description | Example |
 | --- | --- | --- |
 | `ping` | Tests network reachability | `ping -c 4 example.com` |
-| `curl` | Sends HTTP requests or retrieves data | `curl -I https://example.com` |
+| `curl` | Sends HTTP requests or retrieves data | `curl -I [https://example.com](https://example.com)` |
 | `ssh` | Connects to a remote host | `ssh deploy@server.example.com` |
 | `ss` | Inspects network sockets | `ss -ltn` |
 | `ip` | Displays network interfaces and routes | `ip addr` |
 
 ### Common Networking Tasks
 
-```bash
 # Display network interfaces
+
 ip addr
 
 # Inspect routing information
+
 ip route
 
 # List listening TCP ports
+
 ss -ltn
 
 # Retrieve HTTP response headers
-curl -I [https://example.com](https://example.com)
+
+curl -I [https://example.com](https://www.google.com/url?sa=E&source=gmail&q=https://example.com)
 
 # Connect using a custom SSH port
-ssh -p 2222 deploy@192.0.2.10
 
-```
+ssh -p 2222 deploy@192.0.2.10
 
 > **Note:** A failed ping does not necessarily indicate that a server is offline. ICMP traffic may be blocked by firewalls or network policies.
 
@@ -203,20 +180,21 @@ ssh -p 2222 deploy@192.0.2.10
 
 ### Resource Inspection
 
-```bash
 # Check filesystem usage
+
 df -h
 
 # Summarize log-directory size
+
 du -sh /var/log
 
 # Display memory and swap usage
+
 free -h
 
 # Inspect disks and filesystem types
-lsblk -f
 
-```
+lsblk -f
 
 > **Troubleshooting Workflow:** Use `df -h` to identify a full filesystem, then investigate the relevant directories with `du` to locate large files or accumulated logs.
 
@@ -237,17 +215,17 @@ lsblk -f
 
 ### Investigating Service Failures
 
-```bash
 # Inspect service status
+
 sudo systemctl status nginx
 
 # Display recent service logs
+
 sudo journalctl -u nginx -n 100
 
 # Follow new log entries
-sudo journalctl -u nginx -f
 
-```
+sudo journalctl -u nginx -f
 
 ### Useful Journal Options
 
@@ -273,17 +251,17 @@ sudo journalctl -u nginx -f
 
 ### Installing a Web Server
 
-```bash
 # Refresh package information
+
 sudo apt update
 
 # Install Nginx
+
 sudo apt install nginx
 
 # Verify the service
-sudo systemctl status nginx
 
-```
+sudo systemctl status nginx
 
 > **Note:** Package managers differ between Linux distributions. For example, Fedora uses DNF, while Arch Linux uses Pacman.
 
@@ -302,17 +280,17 @@ sudo systemctl status nginx
 
 ### Working with TAR Archives
 
-```bash
 # Create a compressed archive
+
 tar -czf app-backup.tar.gz app/
 
 # List archived files
+
 tar -tzf app-backup.tar.gz
 
 # Extract the archive
-tar -xzf app-backup.tar.gz
 
-```
+tar -xzf app-backup.tar.gz
 
 ### Important TAR Options
 
@@ -340,31 +318,31 @@ tar -xzf app-backup.tar.gz
 
 ### Log-Analysis Examples
 
-```bash
 # Search for failed operations
+
 grep -i "failed" app.log
 
 # Search recursively through application logs
+
 grep -rni "exception" /var/log/myapp/
 
 # Follow a live log file
+
 tail -f app.log
 
 # Count lines containing errors
-grep -ic "error" app.log
 
-```
+grep -ic "error" app.log
 
 ### Redirecting Command Output
 
-```bash
 # Write output to a file, replacing existing contents
+
 echo "Deployment started" > deploy.log
 
 # Append output without replacing existing contents
-echo "Deployment completed" >> deploy.log
 
-```
+echo "Deployment completed" >> deploy.log
 
 * `>` overwrites the destination file.
 * `>>` appends output to the destination file.
@@ -407,7 +385,3 @@ Linux proficiency develops through regular practice. Start with basic filesystem
 This reference can serve as a starting point for Linux administration, cloud infrastructure, CI/CD pipelines, and routine DevOps operations.
 
 > **Understand the command. Verify the result. Automate with confidence.**
-
-```
-
-```
