@@ -1,4 +1,4 @@
-##Linux Operations Handbook for DevOps
+#Linux Operations Handbook for DevOps
 
 <p align="center"> <img src="https://api.iconify.design/lucide:terminal-square.svg?color=%23007BFF" width="64" alt="Terminal icon"/> </p>
 
@@ -40,7 +40,7 @@ groups
 
 DevOps use case: Check your account and permissions before executing administrative commands or troubleshooting access problems.
 
-2. Files and Directories
+#2. Files and Directories
 
 <img src="https://api.iconify.design/lucide:folder.svg?color=%23007BFF" width="20" alt=""/>
 
@@ -70,7 +70,7 @@ cd /var/log
 find . -type f -name "*.log"
 
 Caution: Verify the target path before running destructive commands such as rm -rf.
-3. Permissions and Ownership
+#3. Permissions and Ownership
 
 <img src="https://api.iconify.design/lucide:shield-check.svg?color=%23007BFF" width="20" alt=""/>
 
