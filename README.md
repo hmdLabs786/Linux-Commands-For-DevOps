@@ -1,4 +1,4 @@
-##### Linux Operations Handbook for DevOps
+# Linux Operations Handbook for DevOps
 
 <p align="center"> <img src="https://api.iconify.design/lucide:terminal-square.svg?color=%23007BFF" width="64" alt="Terminal icon"/> </p>
 
